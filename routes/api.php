@@ -6,6 +6,7 @@ use App\Http\Controllers\DemoController;
 use App\Http\Controllers\FolioController;
 use App\Http\Controllers\ImageFolioController;
 use App\Http\Controllers\ImageServiceController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServiceController;
 use App\ImageService;
 use Illuminate\Http\Request;
@@ -77,13 +78,23 @@ Route::group(['prefix' => 'users'], function () {
 
 
 
-
 Route::group(['prefix' => 'image-folios'], function () {
     Route::get('/', [ImageFolioController::class, 'index']);
     Route::post('/', [ImageFolioController::class, 'store'])->middleware('auth:api');
     Route::get('/{id}', [ImageFolioController::class, 'show']);
 
 });
+
+
+Route::group(['prefix' => 'pages'], function () {
+    Route::get('/', [PageController::class, 'index']);
+    Route::post('/', [PageController::class, 'store'])->middleware('auth:api');
+    Route::get('/{id}', [PageController::class, 'show']);
+
+});
+
+
+
 
 
 
