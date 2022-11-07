@@ -17,9 +17,10 @@ class Demo extends Model
         'message',
         'demo_date',
         'service_id',
+        'country',
     ];
-    
-    
+
+
     public function services(){
         return $this->belongsTo(Service::class);
     }

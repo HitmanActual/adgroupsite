@@ -38,6 +38,7 @@ class DemoController extends Controller
             'company_name' => 'required',
             'message' => 'required',
             'service_id'=>'required',
+            'country',
         ];
 
         $validateData = Validator::make($request->all(), $rules);
@@ -58,6 +59,7 @@ class DemoController extends Controller
             'message'=>$request->message,
             'demo_date'=>$request->demo_date,
             'service_id'=>$request->service_id,
+            'country'=>$request->country,
 
         ]);
 
