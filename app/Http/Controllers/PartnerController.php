@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Partner;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class PartnerController extends Controller
 {
+    use ResponseTrait;
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +19,11 @@ class PartnerController extends Controller
     public function index()
     {
         //
+
+        $partners = Partner::all();
+        return $this->successResponse($partners, Response::HTTP_OK);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,6 +34,44 @@ class PartnerController extends Controller
     public function store(Request $request)
     {
         //
+        $rules = [
+            'title' => 'required',
+        ];
+
+        $validateData = Validator::make($request->all(), $rules);
+
+        if ($validateData->fails()) {
+
+            return $validateData->errors();
+        }
+
+        try {
+
+
+            if ($request->hasFile('thumbnail_path')) {
+
+                $file = $request->file('thumbnail_path');
+                $extension = $file->getClientOriginalExtension();
+
+                $newName = md5(microtime()) . time() . '.' . $extension;
+                $file->storeAs('/public/partners', $newName);
+            }
+
+            $page = Partner::create([
+
+                'title' => $request->title,
+                'thumbnail_path' => $newName ?? null,
+
+            ]);
+
+
+            return $this->successResponse($page, Response::HTTP_CREATED);
+
+
+        } catch (QueryException $exception) {
+            return $exception;
+        }
+
     }
 
     /**
@@ -49,16 +85,7 @@ class PartnerController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Partner  $partner
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Partner $partner)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -81,5 +108,6 @@ class PartnerController extends Controller
     public function destroy(Partner $partner)
     {
         //
+
     }
 }

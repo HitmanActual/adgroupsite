@@ -7,6 +7,7 @@ use App\Http\Controllers\FolioController;
 use App\Http\Controllers\ImageFolioController;
 use App\Http\Controllers\ImageServiceController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ServiceController;
 use App\ImageService;
 use Illuminate\Http\Request;
@@ -93,6 +94,13 @@ Route::group(['prefix' => 'pages'], function () {
 
 });
 
+
+Route::group(['prefix' => 'partners'], function () {
+    Route::get('/', [PartnerController::class, 'index']);
+    Route::post('/', [PartnerController::class, 'store'])->middleware('auth:api');
+    Route::get('/{id}', [PartnerController::class, 'show']);
+
+});
 
 
 
