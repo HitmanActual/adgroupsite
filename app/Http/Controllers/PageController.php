@@ -21,7 +21,6 @@ class PageController extends Controller
     public function index()
     {
         //
-
         $services = Page::all();
         return $this->successResponse($services, Response::HTTP_OK);
     }
@@ -38,7 +37,6 @@ class PageController extends Controller
         //
         $rules = [
             'title' => 'required',
-
         ];
 
         $validateData = Validator::make($request->all(), $rules);
@@ -60,7 +58,7 @@ class PageController extends Controller
                 $file->storeAs('/public/pages', $newName);
             }
 
-            $folio = Page::create([
+            $page = Page::create([
 
                 'section' => $request->section,
                 'title' => $request->title,
@@ -71,7 +69,7 @@ class PageController extends Controller
             ]);
 
 
-            return $this->successResponse($folio, Response::HTTP_CREATED);
+            return $this->successResponse($page, Response::HTTP_CREATED);
 
 
         } catch (QueryException $exception) {
@@ -89,6 +87,10 @@ class PageController extends Controller
     public function show($id)
     {
         //
+        $page = Page::findOrFail($id);
+        return $this->successResponse($page, Response::HTTP_OK);
+
+
     }
 
 
@@ -113,5 +115,6 @@ class PageController extends Controller
     public function destroy(Page $page)
     {
         //
+
     }
 }
