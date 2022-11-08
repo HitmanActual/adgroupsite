@@ -83,9 +83,13 @@ class CompanyController extends Controller
      * @param \App\Company $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, $id)
     {
         //
+        $company = Company::findOrFail($id);
+        $company->title = $request->title;
+        $company->save();
+        return $this->successResponse($company, Response::HTTP_OK);
     }
 
     /**
@@ -94,8 +98,11 @@ class CompanyController extends Controller
      * @param \App\Company $company
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Company $company)
+    public function destroy($company)
     {
         //
+        $company = Company::findOrFail($company);
+        $company->delete();
+        return $this->successResponse($company, Response::HTTP_OK);
     }
 }

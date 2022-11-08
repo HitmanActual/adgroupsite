@@ -33,7 +33,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'companies'], function () {
     Route::get('/', [CompanyController::class, 'index']);
     Route::post('/', [CompanyController::class, 'store'])->middleware('auth:api');
+    Route::patch('/{company}', [CompanyController::class, 'update'])->middleware('auth:api');
     Route::get('/{company}', [CompanyController::class, 'show']);
+    Route::delete('/{company}', [CompanyController::class, 'destroy'])->middleware('auth:api');;
 
 });
 
@@ -58,7 +60,9 @@ Route::group(['prefix' => 'image-services'], function () {
 Route::group(['prefix' => 'folios'], function () {
     Route::get('/', [FolioController::class, 'index']);
     Route::post('/', [FolioController::class, 'store'])->middleware('auth:api');
-    Route::get('/{service}', [FolioController::class, 'show']);
+    Route::get('/{folio}', [FolioController::class, 'show']);
+    Route::patch('/{folio}', [FolioController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{folio}', [FolioController::class, 'destroy'])->middleware('auth:api');
 
 });
 
