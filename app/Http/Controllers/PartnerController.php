@@ -94,20 +94,42 @@ class PartnerController extends Controller
      * @param  \App\Partner  $partner
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Partner $partner)
+    public function update(Request $request, $partner)
     {
         //
-    }
+        $partner = Partner::findOrFail($partner);
 
+        $partner->title = $request->title;
+
+
+        if ($request->hasFile('thumbnail_path')) {
+
+            $file = $request->file('thumbnail_path');
+            $extension = $file->getClientOriginalExtension();
+
+            $newName = md5(microtime()) . time() . '.' . $extension;
+            $file->storeAs('/public/partners', $newName);
+
+            $partner->thumbnail_path = $newName;
+        }
+
+
+        $partner->save();
+        return $this->successResponse($partner, Response::HTTP_OK);
+
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Partner  $partner
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Partner $partner)
+    public function destroy($partner)
     {
         //
 
+        $partner = Partner::findOrFail($partner);
+        $partner->delete();
+        return $this->successResponse($partner, Response::HTTP_OK);
     }
 }

@@ -105,6 +105,8 @@ Route::group(['prefix' => 'partners'], function () {
     Route::get('/', [PartnerController::class, 'index']);
     Route::post('/', [PartnerController::class, 'store'])->middleware('auth:api');
     Route::get('/{id}', [PartnerController::class, 'show']);
+    Route::patch('/{id}', [PartnerController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}', [PartnerController::class, 'destroy'])->middleware('auth:api');
 
 });
 
