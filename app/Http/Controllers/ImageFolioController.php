@@ -21,15 +21,7 @@ class ImageFolioController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -85,16 +77,7 @@ class ImageFolioController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ImageFolio  $imageFolio
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ImageFolio $imageFolio)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -103,9 +86,28 @@ class ImageFolioController extends Controller
      * @param  \App\ImageFolio  $imageFolio
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ImageFolio $imageFolio)
+    public function update(Request $request, $imageFolio)
     {
         //
+        $imageFolio = ImageFolio::findOrFail($imageFolio);
+
+        $imageFolio->title = $request->title;
+
+
+        if ($request->hasFile('thumbnail_path')) {
+
+            $file = $request->file('thumbnail_path');
+            $extension = $file->getClientOriginalExtension();
+
+            $newName = md5(microtime()) . time() . '.' . $extension;
+            $file->storeAs('/public/folios', $newName);
+
+            $imageFolio->thumbnail_path = $newName;
+        }
+
+        $imageFolio->save();
+        return $this->successResponse(ImageFolio, Response::HTTP_OK);
+
     }
 
     /**
@@ -114,8 +116,11 @@ class ImageFolioController extends Controller
      * @param  \App\ImageFolio  $imageFolio
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ImageFolio $imageFolio)
+    public function destroy($imageFolio)
     {
         //
+        $imageFolio = ImageFolio::findOrFail($imageFolio);
+        $imageFolio->delete();
+        return $this->successResponse($imageFolio, Response::HTTP_OK);
     }
 }

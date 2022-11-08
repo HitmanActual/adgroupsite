@@ -12,6 +12,7 @@ class ImageServiceController extends Controller
 {
 
     use ResponseTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +27,7 @@ class ImageServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -35,8 +36,8 @@ class ImageServiceController extends Controller
 
         //
         $rules = [
-            'service_id'=>'required',
-            'image_path'=>'required',
+            'service_id' => 'required',
+            'image_path' => 'required',
         ];
 
         $validateData = Validator::make($request->all(), $rules);
@@ -47,17 +48,17 @@ class ImageServiceController extends Controller
         }
 
 
-        if($request->hasFile('image_path')){
+        if ($request->hasFile('image_path')) {
 
-            foreach ($request->image_path as $file){
+            foreach ($request->image_path as $file) {
 
                 $fileName = $file->getClientOriginalExtension();
                 $newName = md5(microtime()) . time() . '.' . $fileName;
                 $file->storeAs('/public/services', $newName);
 
                 $imageService = ImageService::create([
-                    'service_id'=>$request->service_id,
-                    'image_path'=>$newName,
+                    'service_id' => $request->service_id,
+                    'image_path' => $newName,
                 ]);
             }
 
@@ -69,7 +70,7 @@ class ImageServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ImageService  $imageService
+     * @param \App\ImageService $imageService
      * @return \Illuminate\Http\Response
      */
     public function show(ImageService $imageService)
@@ -80,36 +81,48 @@ class ImageServiceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ImageService  $imageService
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ImageService $imageService)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ImageService  $imageService
+     * @param \Illuminate\Http\Request $request
+     * @param \App\ImageService $imageService
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ImageService $imageService)
+    public function update(Request $request, $imageService)
     {
         //
+        $imageService = ImageService::findOrFail($imageService);
+
+        $imageService->title = $request->title;
+
+
+        if ($request->hasFile('thumbnail_path')) {
+
+            $file = $request->file('thumbnail_path');
+            $extension = $file->getClientOriginalExtension();
+
+            $newName = md5(microtime()) . time() . '.' . $extension;
+            $file->storeAs('/public/services', $newName);
+
+            $imageService->thumbnail_path = $newName;
+        }
+
+
+        $imageService->save();
+        return $this->successResponse($imageService, Response::HTTP_OK);
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ImageService  $imageService
+     * @param \App\ImageService $imageService
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ImageService $imageService)
+    public function destroy($imageService)
     {
         //
+        $imageService = ImageService::findOrFail($imageService);
+        $imageService->delete();
+        return $this->successResponse($imageService, Response::HTTP_OK);
     }
 }
