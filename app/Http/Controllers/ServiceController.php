@@ -70,7 +70,7 @@ class ServiceController extends Controller
                 'title' => $request->title,
                 'thumbnail_path' => $newName ?? null,
                 'description' => $request->description,
-                'video_url'=>$request->video_url,
+                'video_url' => $request->video_url,
             ]);
 
 
@@ -107,9 +107,33 @@ class ServiceController extends Controller
      * @param \App\Service $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $service)
     {
         //
+        $service = Service::findOrFail($service);
+        $service->company_id = $request->company_id;
+        $service->title = $request->title;
+
+
+        if ($request->hasFile('thumbnail_path')) {
+
+            $file = $request->file('thumbnail_path');
+            $extension = $file->getClientOriginalExtension();
+
+            $newName = md5(microtime()) . time() . '.' . $extension;
+            $file->storeAs('/public/services', $newName);
+
+            $service->thumbnail_path = $newName;
+        }
+
+
+        $service->description = $request->description;
+
+        $service->video_url = $request->video_url;
+
+        $service->save();
+        return $this->successResponse($service, Response::HTTP_OK);
+
     }
 
     /**
@@ -118,8 +142,11 @@ class ServiceController extends Controller
      * @param \App\Service $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy($service)
     {
         //
+        $service = Service::findOrFail($service);
+        $service->delete();
+        return $this->successResponse($service, Response::HTTP_OK);
     }
 }

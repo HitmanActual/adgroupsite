@@ -33,8 +33,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'companies'], function () {
     Route::get('/', [CompanyController::class, 'index']);
     Route::post('/', [CompanyController::class, 'store'])->middleware('auth:api');
-    Route::patch('/{company}', [CompanyController::class, 'update'])->middleware('auth:api');
+
     Route::get('/{company}', [CompanyController::class, 'show']);
+    Route::patch('/{company}', [CompanyController::class, 'update'])->middleware('auth:api');
     Route::delete('/{company}', [CompanyController::class, 'destroy'])->middleware('auth:api');;
 
 });
@@ -44,6 +45,8 @@ Route::group(['prefix' => 'services'], function () {
     Route::get('/', [ServiceController::class, 'index']);
     Route::post('/', [ServiceController::class, 'store'])->middleware('auth:api');
     Route::get('/{service}', [ServiceController::class, 'show']);
+    Route::patch('/{service}', [ServiceController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{service}', [ServiceController::class, 'destroy'])->middleware('auth:api');
 
 });
 
@@ -56,7 +59,6 @@ Route::group(['prefix' => 'image-services'], function () {
 });
 
 
-
 Route::group(['prefix' => 'folios'], function () {
     Route::get('/', [FolioController::class, 'index']);
     Route::post('/', [FolioController::class, 'store'])->middleware('auth:api');
@@ -67,7 +69,6 @@ Route::group(['prefix' => 'folios'], function () {
 });
 
 
-
 Route::group(['prefix' => 'request-demo'], function () {
     Route::get('/', [DemoController::class, 'index']);
     Route::post('/', [DemoController::class, 'store']);
@@ -76,11 +77,10 @@ Route::group(['prefix' => 'request-demo'], function () {
 
 
 Route::group(['prefix' => 'users'], function () {
-  Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
 });
-
 
 
 Route::group(['prefix' => 'image-folios'], function () {
