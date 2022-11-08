@@ -95,6 +95,8 @@ Route::group(['prefix' => 'pages'], function () {
     Route::get('/', [PageController::class, 'index']);
     Route::post('/', [PageController::class, 'store'])->middleware('auth:api');
     Route::get('/{id}', [PageController::class, 'show']);
+    Route::patch('/{id}', [PageController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}', [PageController::class, 'destroy'])->middleware('auth:api');
 
 });
 

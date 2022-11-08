@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
     //
+    use SoftDeletes;
 
     protected $fillable = [
         'section',
@@ -16,7 +18,6 @@ class Page extends Model
         'thumbnail_path',
         'description',
     ];
-
 
     public function getThumbnailPathAttribute($val){
 
